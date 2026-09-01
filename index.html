@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Development of Computer-Assisted Proofs in Dynamical Systems — RIMS Workshop</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
   <style>
     :root {
       --bg: #fbfaf7;
@@ -20,7 +21,7 @@
 
     * { box-sizing: border-box; }
 
-    html { -webkit-text-size-adjust: 100%; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -212,6 +213,10 @@
     .people li:hover::after { opacity: 0.5; }
     .people .name { font-weight: 600; font-size: 1rem;}
     .people .affil { display: block; font-size: 0.6rem; color: var(--muted); }
+    /* Speaker cards link to their slot in the schedule */
+    .people li a { color: inherit; }
+    .people li a:hover { text-decoration: none; }
+    .people li a::after { content: ""; position: absolute; inset: 0; }   /* whole card clickable */
 
     /* ============ Schedule ============ */
     .schedule {
@@ -276,6 +281,58 @@
     .schedule .brk .time,
     .schedule .brk .event { color: var(--muted); }
     .schedule .tbc { color: var(--muted); font-style: italic; }
+
+    /* Current slot (set by the script: speaker links + clicks inside the schedule):
+       breathing room above the slot, accent on the name */
+    .schedule .slots li, .schedule .talk details { scroll-margin-top: 1.25rem; }
+    .schedule .slots li.current .who { color: var(--accent); }
+
+    /* Talks with an abstract: the whole row is a <details> disclosure */
+    .schedule .slots li.talk { display: block; padding: 0; }
+    .schedule .talk summary {
+      display: grid;
+      grid-template-columns: 7.75rem minmax(0, 1fr);
+      gap: 0.15rem 1rem;
+      padding: 0.55rem 0;
+      cursor: pointer;
+      list-style: none;                 /* hide the default disclosure triangle */
+    }
+    .schedule .talk summary::-webkit-details-marker { display: none; }
+    .schedule .talk summary::marker { content: ""; }
+    @media (max-width: 480px) {
+      .schedule .talk summary { grid-template-columns: 1fr; }
+    }
+    .schedule .talktitle {
+      display: block;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--text);
+    }
+    .schedule .abs-hint {               /* the +/− "abstract" toggle cue */
+      display: inline-block;
+      margin-top: 0.25rem;
+      font: 600 0.62rem/1.4 var(--mono);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .schedule .abs-hint::before { content: "+ "; }
+    .schedule .talk details[open] .abs-hint::before { content: "− "; }   /* U+2212 minus + space */
+    .schedule .talk summary:hover .abs-hint { text-decoration: underline; }
+    .schedule .abstract {
+      margin: 0.2rem 0 0.9rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--accent-soft);
+      font-size: 0.88rem;
+      color: #2c333b;
+      max-width: 62ch;
+    }
+    .schedule .abstract p { margin: 0 0 0.7rem; }
+    .schedule .abstract p:last-child { margin-bottom: 0; }
+    .schedule .katex { font-size: 1.06em; }   /* KaTeX defaults to 1.21em — too loud in small text */
+    @media (min-width: 481px) {
+      .schedule .abstract { margin-left: 8.75rem; }   /* align under the event column */
+    }
 
     /* ============ Venue ============ */
     .venue {
@@ -901,27 +958,32 @@
     </section>
 
     <!-- ============ SPEAKERS ============ -->
-    <!-- Add one <li> per speaker. Affiliation line is optional. -->
+    <!-- Add one <li> per speaker; wrap the card in <a href="#lastname"> to link to their schedule slot.
+         Affiliation line is optional. -->
     <section id="speakers">
       <h2>Speakers</h2>
       <ul class="people">
-        <li><span class="name">Jan Bouwe van den Berg</span><span class="affil">Vrije Universiteit Amsterdam</span></li>
-        <li><span class="name">Hugo Chu</span><span class="affil">École Polytechnique</span></li>
-        <li><span class="name">Kevin Constantineau</span><span class="affil">McGill University</span></li>
-        <li><span class="name">Alvaro Fernandez Mora</span><span class="affil">Monash University</span></li>
-        <li><span class="name">Olivier Hénot</span><span class="affil">National Taiwan University</span></li>
-        <li><span class="name">Jonathan Jaquette</span><span class="affil">New Jersey Institute of Technology</span></li>
-        <li><span class="name">Xuefeng Liu</span><span class="affil">Tokyo Woman's Christian University</span></li>
-        <li><span class="name">Kaname Matsue</span><span class="affil">Kyushu University</span></li>
-        <li><span class="name">Juan Miranda</span><span class="affil">Florida Atlantic University</span></li>
-        <li><span class="name">Konstantin Mischaikow</span><span class="affil">Rutgers University</span></li>
-        <li><span class="name">Keiichi Morikuni</span><span class="affil">University of Tsukuba</span></li>
+        <li><a href="#van-den-berg"><span class="name">Jan Bouwe van den Berg</span><span class="affil">Vrije Universiteit Amsterdam</span></a></li>
+        <li><a href="#chu"><span class="name">Hugo Chu</span><span class="affil">École Polytechnique</span></a></li>
+        <li><a href="#constantineau"><span class="name">Kevin Constantineau</span><span class="affil">McGill University</span></a></li>
+        <li><a href="#fernandez-mora"><span class="name">Alvaro Fernandez Mora</span><span class="affil">Monash University</span></a></li>
+        <li><a href="#henot"><span class="name">Olivier Hénot</span><span class="affil">National Taiwan University</span></a></li>
+        <li><a href="#jaquette"><span class="name">Jonathan Jaquette</span><span class="affil">New Jersey Institute of Technology</span></a></li>
+        <li><a href="#liu"><span class="name">Xuefeng Liu</span><span class="affil">Tokyo Woman's Christian University</span></a></li>
+        <li><a href="#matsue"><span class="name">Kaname Matsue</span><span class="affil">Kyushu University</span></a></li>
+        <li><a href="#miranda"><span class="name">Juan Miranda</span><span class="affil">Florida Atlantic University</span></a></li>
+        <li><a href="#mischaikow"><span class="name">Konstantin Mischaikow</span><span class="affil">Rutgers University</span></a></li>
+        <li><a href="#miyauchi"><span class="name">Hiroaki Miyauchi</span><span class="affil">University of Tsukuba</span></a></li>
+        <li><a href="#morikuni"><span class="name">Keiichi Morikuni</span><span class="affil">University of Tsukuba</span></a></li>
       </ul>
     </section>
 
     <!-- ============ SCHEDULE ============ -->
     <!-- One .day block per day; one <li> per slot: <span class="time"> then <span class="event">.
-         Add class="brk" to the <li> for breaks/lunch (renders muted). -->
+         Add class="brk" to the <li> for breaks/lunch (renders muted).
+         Talks with an abstract: <li class="talk"><details id="lastname"> — the <summary> holds the
+         time / speaker / title row plus the "abstract" toggle cue, the .abstract div holds the text.
+         Link directly to a talk with #lastname; the script at the end of the page opens it. -->
     <section id="schedule">
       <h2>Schedule</h2>
       <ol class="schedule">
@@ -929,7 +991,7 @@
         <li class="day">
           <h3 class="dayhead"><span class="daynum">Day 1</span><span>Wednesday 9 September</span></h3>
           <ol class="slots">
-            <li>
+            <li id="mischaikow">
               <span class="time">09:30–10:30</span>
               <span class="event"><span class="who">Konstantin Mischaikow</span></span>
             </li>
@@ -937,29 +999,74 @@
               <span class="time">10:30–11:00</span>
               <span class="event">Break</span>
             </li>
-            <li>
-              <span class="time">11:00–12:00</span>
-              <span class="event"><span class="who">Xuefeng Liu</span></span>
+            <li class="talk">
+              <details id="liu">
+                <summary>
+                  <span class="time">11:00–12:00</span>
+                  <span class="event">
+                    <span class="who">Xuefeng Liu</span>
+                    <span class="talktitle">Non-uniqueness of Leray–Hopf solutions: computer-assisted approaches with and without axisymmetry</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>The non-uniqueness of Leray–Hopf solutions to the unforced 3D Navier–Stokes equations was recently established by Hou, Wang and Yang through a computer-assisted proof, in which a self-similar profile is constructed and a second solution obtained from an unstable eigenvalue of the linearization about it. Their framework exploits axisymmetry, which reduces incompressibility to a scalar stream function.</p>
+                  <p>This talk reviews that result and then presents an on-going approach designed to dispense with axisymmetry, where no such reduction exists. The proposal is to enforce incompressibility at the discrete level using exactly divergence-free Scott–Vogelius finite elements, and to quantify the associated projection error by an extended hypercircle (Prager–Synge) estimate with explicit constants, so that verified computation can supply the bounds a rigorous existence argument needs.</p>
+                </div>
+              </details>
             </li>
             <li class="brk">
               <span class="time">12:00–14:00</span>
-              <span class="event">Lunch</span>
+              <span class="event">Lunch <span aria-hidden="true">🍱</span></span>
             </li>
-            <li>
-              <span class="time">14:00–15:00</span>
-              <span class="event"><span class="who">Jan Bouwe van den Berg</span></span>
+            <li class="talk">
+              <details id="van-den-berg">
+                <summary>
+                  <span class="time">14:00–15:00</span>
+                  <span class="event">
+                    <span class="who">Jan Bouwe van den Berg</span>
+                    <span class="talktitle">CAPs for localized traveling waves in the two-dimensional suspension bridge equation</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>Traveling waves are a central feature in the dynamics of the suspension bridge PDE. While most studies have focused on the one-dimensional case, we develop computer-assisted proof (CAP) techniques to rigorously establish the existence of periodic and localized traveling waves in two dimensions. Our approach relies on a Newton-Kantorovich framework combined with careful Fourier analysis, where the main challenge is the combination of the exponential nonlinearity and the large amplitudes of the wave. By deriving computable bounds that control aliasing errors, we can control both the residue and the contraction constant of the fixed point operator sufficiently to prove the existence of traveling wave solutions. Moreover, the methodology provides explicit bounds on numerical deficiencies and allows us to enclose the spectrum of the linearized operator rigorously, yielding conclusions about orbital stability. This talk is based on work with and by Lindsey van der Aalst, Matthieu Cadiot, Jean-Philippe Lessard.</p>
+                </div>
+              </details>
             </li>
-            <li>
-              <span class="time">15:00–16:00</span>
-              <span class="event"><span class="who">Keiichi Morikuni</span></span>
+            <li class="talk">
+              <details id="morikuni">
+                <summary>
+                  <span class="time">15:00–16:00</span>
+                  <span class="event">
+                    <span class="who">Keiichi Morikuni</span>
+                    <span class="talktitle">Verified numerical eigenvalue computation of differential operators using complex moments with applications to Schrödinger and Mathieu equations</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>A numerical verification analogue of our operator eigensolver is established to enclose eigenvalues of a linear, self-adjoint, and ordinary differential operator in a Hilbert space. The eigensolver computes complex moments via contour integration of the resolvent along a path enclosing the interval on the real axis that contains the desired eigenvalues. These moments then form a block Hankel matrix pencil whose eigenvalues include those of interest. The truncation error arising from approximating the integral by a quadrature rule depends on the spectrum lying outside the region of interest. To obtain an explicit bound on this exterior spectrum, we focus on the case where the operator is a perturbed Laplacian and evaluate the effect of the perturbation via the Krylov–Weinstein bound. Numerical experiments on Mathieu’s and Schrödinger’s equations demonstrate the performance of the method.</p>
+                </div>
+              </details>
             </li>
             <li class="brk">
               <span class="time">16:00–16:30</span>
               <span class="event">Break</span>
             </li>
-            <li>
-              <span class="time">16:30–17:00</span>
-              <span class="event"><span class="who">Kevin Constantineau</span></span>
+            <li class="talk">
+              <details id="constantineau">
+                <summary>
+                  <span class="time">16:30–17:00</span>
+                  <span class="event">
+                    <span class="who">Kevin Constantineau</span>
+                    <span class="talktitle">Platonic constellations of periodic motions in the $(n+1)$-body problem</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>We study the spatial $(n+1)$-body problem formed by one heavy central mass together with $n$ equal masses placed on a single orbit of a polyhedral rotation group $H\in\{\mathbb{T},\mathbb{O},\mathbb{I}\}$, so that $n=|H|\in\{12,24,60\}$. Imposing the symmetry $q_{L}=L\,q_{I}$ for $L\in H$ reduces the problem to a single $2\pi$-periodic reference curve, with reduced action $\mathcal{A}_{H}=\mathcal{A}_{0}+\varepsilon \mathcal{A}_{1}$, in which $\varepsilon$ is the inverse central mass and $\mathcal{A}_{0}$ is the Kepler action. At $\varepsilon=0$ the critical set contains, as one connected component, the five-dimensional manifold of Kepler ellipses of minimal period $2\pi$, which we prove to be a nondegenerate critical manifold. A Lyapunov–Schmidt reduction along this manifold turns the continuation problem into the search for nondegenerate critical points of an explicit function $\Phi(e,\psi)$ of the eccentricity $e$ and the spatial orientation $\psi$. We verify this condition by a computer-assisted argument in which we rigorously compute integrals using Fourier methods. We thereby obtain, for each of the three groups, families of periodic solutions of the $(n+1)$-body problem with $n+1\in\{13,25,61\}$ bodies, bifurcating from Kepler ellipses and carrying the full tetrahedral, octahedral, or icosahedral symmetry.</p>
+                </div>
+              </details>
             </li>
           </ol>
         </li>
@@ -967,7 +1074,7 @@
         <li class="day">
           <h3 class="dayhead"><span class="daynum">Day 2</span><span>Thursday 10 September</span></h3>
           <ol class="slots">
-            <li>
+            <li id="henot">
               <span class="time">10:00–11:30</span>
               <span class="event">
                 <span class="who">Olivier Hénot</span>
@@ -976,20 +1083,43 @@
             </li>
             <li class="brk">
               <span class="time">12:00–14:00</span>
-              <span class="event">Lunch</span>
+              <span class="event">Lunch <span aria-hidden="true">🍱</span></span>
             </li>
-            <li>
-              <span class="time">14:00–15:00</span>
-              <span class="event"><span class="who">Jonathan Jaquette</span></span>
+            <li class="talk">
+              <details id="jaquette">
+                <summary>
+                  <span class="time">14:00–15:00</span>
+                  <span class="event">
+                    <span class="who">Jonathan Jaquette</span>
+                    <span class="talktitle">Axisymmetric Navier–Stokes equations with swirl: computer-assisted proofs of steady states with an eye towards richer dynamics</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>The global regularity of solutions to the 3D Navier–Stokes equations is famously unknown, and the axisymmetric case with swirl is perhaps the simplest geometry in which blowup may occur. We study this setting on a periodic cylinder with no-slip boundary conditions and time-independent body forcing, where weak solutions are guaranteed to have a global attractor and computer-assisted proofs are uniquely positioned to give rigorous results in a non-perturbative regime. In this geometry the equations reduce to a system in a periodic axial variable and a radial variable. In any problem one wants the basis used to express solutions to have several desirable properties: easy to express differential operators, easy to compute products, and rapid convergence properties. Fourier series are best for periodic domains, but there is no uniformly best option for radial variables.</p>
+                  <p>Our approach for developing computer-assisted proofs of steady states of the Navier-Stokes equations in a cylindrical domain uses a Fourier–Jacobi (Zernike) basis. This approach has its advantages: the differential operators act as sparse ladder and conversion operators between Jacobi families; multiplication via interpolation may be computed accurately and relatively quickly; the spectral coefficients of solutions converge geometrically. However laborious quantitative estimates are required for the computer-assisted proof: e.g. the derivative nonlinearity requires bilinear estimates from multiplying different polynomial bases, and inverting the Stokes operator on this basis and recovering explicit decay estimates requires significant effort. With this infrastructure in place we prove the existence of steady states, and we expect the framework to apply more broadly to PDEs in cylindrical geometries, and to richer dynamics.</p>
+                </div>
+              </details>
             </li>
-            <li>
-              <span class="time">15:00–16:00</span>
-              <span class="event"><span class="who">Alvaro Fernandez Mora</span></span>
+            <li class="talk">
+              <details id="fernandez-mora">
+                <summary>
+                  <span class="time">15:00–16:00</span>
+                  <span class="event">
+                    <span class="who">Alvaro Fernandez Mora</span>
+                    <span class="talktitle">Computer-assisted approach for the infinitesimal Hilbert 16th problem</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>The infinitesimal Hilbert's 16th problem asks for a uniform upper bound on the number of limit cycles in polynomial Hamiltonian vector fields under polynomial perturbations. Let Z(n) denote this maximum number of limit cycles, where n is the degree of the perturbation and n+1 is the degree of the Hamiltonian. Upper bounds for Z(n) remain largely unknown even for low degrees. In this work, we present novel computer-assisted techniques to approach this classical problem. We apply our framework to construct an alternative proof of the celebrated result Z(2)=2. While the quadratic case is one of the few cases that has been fully solved, our primary objective is to build a scalable toolkit capable of overcoming the algebraic complexity that currently limits the study of Z(n) for large n.</p>
+                </div>
+              </details>
             </li>
             <li class="brk">
               <!-- Replace TBC with the confirmed dinner time. -->
               <span class="time tbc">TBC</span>
-              <span class="event">Workshop dinner</span>
+              <span class="event">Workshop dinner <span aria-hidden="true">🍶</span></span>
             </li>
           </ol>
         </li>
@@ -997,23 +1127,60 @@
         <li class="day">
           <h3 class="dayhead"><span class="daynum">Day 3</span><span>Friday 11 September</span></h3>
           <ol class="slots">
-            <li>
-              <span class="time">10:00–11:00</span>
-              <span class="event"><span class="who">Kaname Matsue</span></span>
+            <li class="talk">
+              <details id="matsue">
+                <summary>
+                  <span class="time">10:00–11:00</span>
+                  <span class="event">
+                    <span class="who">Kaname Matsue</span>
+                    <span class="talktitle">Algebraic-dynamical correspondence of oscillatory blow-up solutions</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>Rigorous detection and characterization of blow-up solutions to differential equations constitute challenging problems in differential equations and numerical analysis, particularly in understanding the global behavior of solutions and in dealing with dynamics at infinity.</p>
+                  <p>In recent years, a combination of rigorous numerics (computer-assisted proofs) and techniques from dynamical systems, including compactifications, time-scale desingularizations, and invariant manifold theory, has provided a systematic methodology for capturing both qualitative and quantitative properties of blow-up solutions for certain classes of ordinary differential equations. Despite its potential, however, this approach may require substantial and intricate computations associated with compactification and desingularization.</p>
+                  <p>An alternative viewpoint is provided by an algebraic-dynamical correspondence based on asymptotic expansions of type-I blow-up solutions. On the algebraic side, the leading-order asymptotic profiles and their scaling exponents are characterized by balance relations derived directly from the original differential equations. On the dynamical side, these profiles are related to invariant structures governing the dynamics at infinity. This correspondence makes it possible to extract essential information on blow-up behavior without explicitly constructing a compactification, while retaining a connection with the dynamical mechanisms responsible for the singularity.</p>
+                  <p>In this talk, I will present a recent development of this framework for blow-up solutions exhibiting oscillatory divergence. In particular, I will discuss how periodic solutions of the associated balance equation are related to oscillatory blow-up trajectories and how their dynamical properties determine the asymptotic behavior of the original solutions. Several concrete examples will be presented to illustrate the correspondence. The resulting framework provides a structural description of oscillatory blow-up and may also offer a useful basis for future rigorous numerical studies of a broader class of finite-time singularities.</p>
+                </div>
+              </details>
             </li>
-            <li>
-              <span class="time">11:00–11:30</span>
-              <span class="event"><span class="who">Juan Miranda</span></span>
+            <li class="talk">
+              <details id="miranda">
+                <summary>
+                  <span class="time">11:00–11:30</span>
+                  <span class="event">
+                    <span class="who">Juan Miranda</span>
+                    <span class="talktitle">Computer-assisted proofs for nonlinear problems in the Borel plane and validated numerics for complex convolutions</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>The Borel transform is a useful tool for studying functional equations whose solutions are infinitely differentiable but not analytic. For nonlinear problems, matters are complicated by the fact that the transform takes pointwise multiplications to complex convolutions. Nevertheless, Bonckaert and Maesschalck (2008) have shown that complex convolution results in a Banach algebra structure, after introduction of an appropriate norm. I will discuss how these tools are used to approximate non-analytic functions and obtain rigorous computer assisted error bounds on divergent series in computer assisted proofs.</p>
+                </div>
+              </details>
             </li>
             <li class="brk">
               <span class="time">12:00–14:00</span>
-              <span class="event">Lunch</span>
+              <span class="event">Lunch <span aria-hidden="true">🍱</span></span>
             </li>
-            <li>
-              <span class="time">14:00–15:00</span>
-              <span class="event"><span class="who">Hugo Chu</span></span>
+            <li class="talk">
+              <details id="chu">
+                <summary>
+                  <span class="time">14:00–15:00</span>
+                  <span class="event">
+                    <span class="who">Hugo Chu</span>
+                    <span class="talktitle">Computer-assisted proofs for PDEs via Newton iterations: a matrix-free approach</span>
+                    <span class="abs-hint" aria-hidden="true">abstract</span>
+                  </span>
+                </summary>
+                <div class="abstract">
+                  <p>Computer-assisted proofs have become increasingly common in the study of differential equations and dynamical systems. Many of these proofs rely on a common strategy: first compute a numerical approximation of a solution, then construct a quasi-Newton operator, and finally prove that this operator is a contraction in an explicit neighbourhood of the approximation. Using compactness estimates, the construction of such a quasi-Newton operator can be reduced to the numerical computation of a finite-dimensional inverse. In practice, however, this inverse matrix can be extremely large — easily exceeding the RAM available for a standard cluster job. For three or four-dimensional PDEs, this step frequently becomes the main computational bottleneck.</p>
+                  <p>In this talk, I will present a new matrix-free approach for handling the finite-dimensional component. This method relies only on standard tools from scientific computing and numerical linear algebra. By leveraging algorithms such as iterative solvers and discrete transforms, the approach is naturally parallelisable and scales better than the traditional methods used in most computer-assisted proofs, both in terms of memory usage and runtime. Time permitting, I will also discuss some of the computational and algorithmic challenges that arise with this new method. This is joint work with Maxime Breden (École Polytechnique).</p>
+                </div>
+              </details>
             </li>
-            <li>
+            <li id="miyauchi">
               <span class="time">15:00–15:30</span>
               <span class="event"><span class="who">Hiroaki Miyauchi</span></span>
             </li>
@@ -1049,6 +1216,49 @@
     <span>Organized by <span class="placeholder">Olivier Hénot &amp; Akitoshi Takayasu</span> · RIMS, Kyoto University · 2026</span>
     <span class="fin" aria-hidden="true">∎ fin.</span>
   </footer>
+
+  <!-- KaTeX renders the $…$ math in talk titles/abstracts (loaded at the end so it never blocks the page) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
+  <script>
+    // Speaker links & talk anchors: open the abstract and move the .current highlight.
+    (function () {
+      function setCurrent(el) {
+        document.querySelectorAll('.schedule .slots li.current').forEach(function (n) {
+          n.classList.remove('current');
+        });
+        if (el) el.classList.add('current');
+      }
+      function openTarget() {
+        var el = location.hash && document.getElementById(location.hash.slice(1));
+        if (!el) return;
+        if (el.tagName === 'DETAILS') el.open = true;
+        setCurrent(el.closest('li'));
+      }
+      // Expanding an abstract moves the highlight to that talk; collapsing the
+      // highlighted talk's abstract clears the highlight. Closing never highlights.
+      document.querySelectorAll('.schedule .talk details').forEach(function (d) {
+        d.addEventListener('toggle', function () {
+          var li = d.closest('li');
+          if (d.open) setCurrent(li);
+          else if (li.classList.contains('current')) setCurrent(null);
+        });
+      });
+      // Re-clicking the already-targeted speaker card still reopens its abstract.
+      document.querySelectorAll('.people a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function () { setTimeout(openTarget); });
+      });
+      // Render LaTeX ($…$ inline, $$…$$ display) inside the schedule only.
+      if (window.renderMathInElement) {
+        renderMathInElement(document.getElementById('schedule'), {
+          delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }],
+          throwOnError: false
+        });
+      }
+      openTarget();
+      addEventListener('hashchange', openTarget);
+    })();
+  </script>
 
 </body>
 </html>
