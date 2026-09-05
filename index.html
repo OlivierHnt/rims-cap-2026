@@ -997,13 +997,13 @@
                   <span class="time">09:30–10:30</span>
                   <span class="event">
                     <span class="who">Konstantin Mischaikow</span>
-                    <span class="talktitle">Computer assisted proofs and latent dynamics</span>
+                    <span class="talktitle">Computer-assisted proofs and latent dynamics</span>
                     <span class="abs-hint" aria-hidden="true">abstract</span>
                   </span>
                 </summary>
                 <div class="abstract">
                   <p>The motivation for this talk is twofold.</p>
-                  <p>The global dynamics of high dimensional or infinite dimensional systems can be extremely complicated. To a bit more explicit, consider parameter dependent partial differential equations that model formation of amorphous or crystalline materials. As a function of the parameters the dimension and complexity of the dynamics on the global attractor grow dramatically and the number of attractors can change. Thus a rigorous understanding of the global dynamics is probably computationally intractable.</p>
+                  <p>The global dynamics of high dimensional or infinite dimensional systems can be extremely complicated. To be a bit more explicit, consider parameter dependent partial differential equations that model formation of amorphous or crystalline materials. As a function of the parameters the dimension and complexity of the dynamics on the global attractor grow dramatically and the number of attractors can change. Thus a rigorous understanding of the global dynamics is probably computationally intractable.</p>
                   <p>Much of the above mentioned dynamics is of limited interest in applications. For material science the most fundamental question is: as a function of parameters what is the domain of attraction of the attractors that correspond to desirable or undesirable material?</p>
                   <p>I will describe some recent results. The first is a theorem that indicates that at least theoretically we can learn dynamics as expressed by Morse representations and Conley indices from data. The second is a theorem that indicates that given an explicit bound an attracting block obtained from a low dimensional latent dynamical system can be lifted to an attracting block of the high dimensional system. I will show some numerical results and then pose the question of whether with additional analysis these numerical results can be made rigorous.</p>
                 </div>
@@ -1200,50 +1200,19 @@
                   <span class="time">15:00–15:30</span>
                   <span class="event">
                     <span class="who">Hiroaki Miyauchi</span>
-                    <span class="talktitle">Computer-assisted proofs for radially symmetric solutions of a semilinear elliptic PDE on the disk via a Fourier-Bessel basis</span>
+                    <span class="talktitle">Computer-assisted proofs for radially symmetric solutions of a semilinear elliptic PDE on the disk via a Fourier–Bessel basis</span>
                     <span class="abs-hint" aria-hidden="true">abstract</span>
                   </span>
                 </summary>
                 <div class="abstract">
-<p>
-We present a computer-assisted proof of the existence and uniqueness of a radially symmetric solution to the semilinear elliptic equation \(\Delta u + u^{2} = 0\) on the unit disk under the Dirichlet boundary condition.
-</p>
-
-<p>
-An approximate solution is represented by an expansion in the Fourier–Bessel basis, whose basis functions are eigenfunctions of the Laplace operator restricted to the space of radially symmetric functions in \(L^{2}(\Omega)\).
-In this basis, the matrix representation of the Laplace operator is diagonal.
-Therefore, the original partial differential equation can be rewritten as an equation \(\mathbb{F}(U)=0\) for the coefficients in the Fourier–Bessel expansion.
-The nonlinear term \(u^2\) leads to sums of products of these coefficients, with the coefficients of these sums given by integrals of products of three Fourier–Bessel basis functions.
-</p>
-
-<p>
-The existence and uniqueness of a solution are proved by combining the Newton–Kantorovich theorem with the radii-polynomial approach.
-For this purpose, we construct an approximate inverse operator of the form \(A=\Delta^{-1}B\).
-To verify the conditions in the Newton–Kantorovich argument, we derive bounds for the quantities \(\mathcal{Y}_{0}\), \(\mathcal{Z}_{1}\), and \(\mathcal{Z}_{2}\) using the structure of the Fourier–Bessel basis.
-</p>
-
-<p>
-The quantity \(\mathcal{Y}_{0}\) is a bound for the residual of the approximate solution, \(\mathcal{Z}_{1}\) measures the error of the approximate inverse operator, and \(\mathcal{Z}_{2}\) bounds the local variation of the Fréchet derivative.
-</p>
-
-<p>
-In particular, the tail part of the coefficients arising from the projection of the nonlinear term onto the Fourier–Bessel basis is estimated by using gradient bounds in the Sobolev space \(H^{1}_{0}(\Omega)\) together with the lower bound \(\nu_{0,k}\geq \pi\left(k-\frac14\right)\) for the positive zeros of the Bessel function of the first kind of order zero.
-</p>
-
-<p>
-The bound \(\mathcal{Z}_{2}\), which controls the variation of the Fr&eacute;chet derivative near the approximate solution, is obtained by using a Gagliardo–Nirenberg inequality for the \(L^{4}(\Omega)\) norm on the unit disk.
-In addition, the residual associated with the approximate solution is bounded by evaluating a single one-dimensional integral using interval arithmetic.
-</p>
-
-<p>
-All conditions required for the computer-assisted proof are verified with interval arithmetic for the truncation dimensions \(N=50,100,150,\) and \(200\). For each truncation dimension, we find an interval on which the radii polynomial is strictly negative.
-This proves the existence and uniqueness of a true solution in a neighborhood of the computed approximation.
-</p>
-
-<p>
-We further observe that the residual bound \(\mathcal{Y}_{0}\) decays at a rate consistent with \(O(N^{-5/2})\) as the truncation dimension \(N\) increases.
-This decay is mainly determined by the tail part that arises when the finite-dimensional approximation is extended to the infinite-dimensional space by setting all coefficients beyond the truncation dimension equal to zero.
-</p>
+                  <p>We present a computer-assisted proof of the existence and uniqueness of a radially symmetric solution to the semilinear elliptic equation \(\Delta u + u^{2} = 0\) on the unit disk under the Dirichlet boundary condition.</p>
+                  <p>An approximate solution is represented by an expansion in the Fourier–Bessel basis, whose basis functions are eigenfunctions of the Laplace operator restricted to the space of radially symmetric functions in \(L^{2}(\Omega)\). In this basis, the matrix representation of the Laplace operator is diagonal. Therefore, the original partial differential equation can be rewritten as an equation \(\mathbb{F}(U)=0\) for the coefficients in the Fourier–Bessel expansion. The nonlinear term \(u^2\) leads to sums of products of these coefficients, with the coefficients of these sums given by integrals of products of three Fourier–Bessel basis functions.</p>
+                  <p>The existence and uniqueness of a solution are proved by combining the Newton–Kantorovich theorem with the radii-polynomial approach. For this purpose, we construct an approximate inverse operator of the form \(A=\Delta^{-1}B\). To verify the conditions in the Newton–Kantorovich argument, we derive bounds for the quantities \(\mathcal{Y}_{0}\), \(\mathcal{Z}_{1}\), and \(\mathcal{Z}_{2}\) using the structure of the Fourier–Bessel basis.</p>
+                  <p>The quantity \(\mathcal{Y}_{0}\) is a bound for the residual of the approximate solution, \(\mathcal{Z}_{1}\) measures the error of the approximate inverse operator, and \(\mathcal{Z}_{2}\) bounds the local variation of the Fréchet derivative.</p>
+                  <p>In particular, the tail part of the coefficients arising from the projection of the nonlinear term onto the Fourier–Bessel basis is estimated by using gradient bounds in the Sobolev space \(H^{1}_{0}(\Omega)\) together with the lower bound \(\nu_{0,k}\geq \pi\left(k-\frac14\right)\) for the positive zeros of the Bessel function of the first kind of order zero.</p>
+                  <p>The bound \(\mathcal{Z}_{2}\), which controls the variation of the Fréchet derivative near the approximate solution, is obtained by using a Gagliardo–Nirenberg inequality for the \(L^{4}(\Omega)\) norm on the unit disk. In addition, the residual associated with the approximate solution is bounded by evaluating a single one-dimensional integral using interval arithmetic.</p>
+                  <p>All conditions required for the computer-assisted proof are verified with interval arithmetic for the truncation dimensions \(N=50,100,150,\) and \(200\). For each truncation dimension, we find an interval on which the radii polynomial is strictly negative. This proves the existence and uniqueness of a true solution in a neighborhood of the computed approximation.</p>
+                  <p>We further observe that the residual bound \(\mathcal{Y}_{0}\) decays at a rate consistent with \(O(N^{-5/2})\) as the truncation dimension \(N\) increases. This decay is mainly determined by the tail part that arises when the finite-dimensional approximation is extended to the infinite-dimensional space by setting all coefficients beyond the truncation dimension equal to zero.</p>
                 </div>
               </details>
             </li>
@@ -1314,7 +1283,7 @@ This decay is mainly determined by the tail part that arises when the finite-dim
       // Render LaTeX ($…$ inline, $$…$$ display) inside the schedule only.
       if (window.renderMathInElement) {
         renderMathInElement(document.getElementById('schedule'), {
-          delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }],
+          delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }, { left: '\\(', right: '\\)', display: false }, { left: '\\[', right: '\\]', display: true }],
           throwOnError: false
         });
       }
